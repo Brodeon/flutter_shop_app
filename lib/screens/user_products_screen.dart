@@ -10,6 +10,8 @@ class UserProductsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<ProductsProvider>(context);
+
     return Scaffold(
       drawer: AppDrawer(),
       appBar: AppBar(
@@ -23,21 +25,21 @@ class UserProductsScreen extends StatelessWidget {
           )
         ],
       ),
-      body: Consumer<ProductsProvider>(
-        builder: (ctx, provider, child) {
-          return ListView.builder(
-            itemBuilder: (_, index) =>
-                Column(
-                  children: <Widget>[
-                    UserProductItem(provider.products[index].title, provider.products[index].imageUrl, provider.products[index].id),
-                    Divider(),
-                  ],
-                ),
+      body: RefreshIndicator(
+          onRefresh: () => provider.fetchAndSetProducts(),
+          child: ListView.builder(
+            itemBuilder: (_, index) => Column(
+              children: <Widget>[
+                UserProductItem(
+                    provider.products[index].title,
+                    provider.products[index].imageUrl,
+                    provider.products[index].id),
+                Divider(),
+              ],
+            ),
             padding: EdgeInsets.all(8),
             itemCount: provider.products.length,
-          );
-        }
-        )
+          )),
     );
   }
 }

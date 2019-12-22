@@ -28,8 +28,12 @@ class ProductItem extends StatelessWidget {
           leading: Consumer<Product>(
             builder: (ctx, product, child) => IconButton(
               icon: Icon(product.isFavourite ? Icons.favorite : Icons.favorite_border, color: Theme.of(context).accentColor,),
-              onPressed: () {
-                product.toggleFavouriteStatus();
+              onPressed: () async {
+                try {
+                  await product.toggleFavouriteStatus();
+                } catch(error) {
+                  print(error);
+                }
               },
             ),
             child: Text('some data'),

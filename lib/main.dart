@@ -18,9 +18,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(providers: [
-      ChangeNotifierProvider.value(value: ProductsProvider()),
-      ChangeNotifierProvider.value(value: Cart()),
-      ChangeNotifierProvider.value(value: Order()),
+      ChangeNotifierProvider(builder: (_) => ProductsProvider(),),
+      ChangeNotifierProvider(builder: (_) => Cart(),),
+      ChangeNotifierProvider(builder: (_) => Order(),),
     ],
       child: MaterialApp(
         title: 'Flutter Demo',

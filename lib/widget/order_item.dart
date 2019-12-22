@@ -30,19 +30,19 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
             });
           },),
         ),
-        if (_expanded)
-          Container(
-            height: min(widget.order.products.length * 20.0 + 10, 180),
-            child: ListView(children: widget.order.products.map((prod) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(prod.title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                  Text('${prod.quantity}x \$${prod.price}', style: TextStyle(fontSize: 18, color: Colors.grey),),
-                ],
-              );
-            }).toList()),
-          ),
+        AnimatedContainer(
+          duration: Duration(milliseconds: 100,),
+          height: _expanded ? min(widget.order.products.length * 20.0 + 10, 180) : 0,
+          child: ListView(children: widget.order.products.map((prod) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(prod.title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                Text('${prod.quantity}x \$${prod.price}', style: TextStyle(fontSize: 18, color: Colors.grey),),
+              ],
+            );
+          }).toList()),
+        ),
       ],),
     );
   }
