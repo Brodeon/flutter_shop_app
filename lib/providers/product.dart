@@ -10,15 +10,16 @@ class Product with ChangeNotifier{
   final String description;
   final double price;
   final String imageUrl;
+  String creatorId;
   bool isFavourite;
 
-  Product({this.id, this.title, this.description, this.price, this.imageUrl, this.isFavourite = false});
+  Product({this.id, this.title, this.description, this.price, this.imageUrl, this.isFavourite = false, this.creatorId});
 
-  Future<void> toggleFavouriteStatus() async {
+  Future<void> toggleFavouriteStatus(String authToken, String userId) async {
     isFavourite = !isFavourite;
     notifyListeners();
     try {
-      var response = await http.patch('https://flutter-shop-3798e.firebaseio.com/products/$id.json', body: json.encode({'isFavourite': isFavourite}));
+      var response = await http.put('https://flutter-shop-3798e.firebaseio.com/userFavourites/$userId/$id.json?auth=$authToken', body: json.encode(isFavourite));
       if (response.statusCode >= 400) {
         throw HttpException('Could not update favourite status');
       }
@@ -41,6 +42,7 @@ class Product with ChangeNotifier{
       'price': price,
       'imageUrl': imageUrl,
       'isFavourite': isFavourite,
+      'creatorId': creatorId,
     };
   }
 

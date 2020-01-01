@@ -9,10 +9,12 @@ import 'package:shop_flutter_app/widget/product_grid.dart';
 
 enum FilterOptions {
   favourites,
-  all
+  all,
+  logout
 }
 
 class ProductOverviewScreen extends StatefulWidget {
+  static const pathName = "/product-overview";
 
   @override
   _ProductOverviewScreenState createState() => _ProductOverviewScreenState();

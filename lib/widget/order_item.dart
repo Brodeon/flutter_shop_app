@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -13,8 +13,23 @@ class OrderItemWidget extends StatefulWidget {
   _OrderItemWidgetState createState() => _OrderItemWidgetState();
 }
 
-class _OrderItemWidgetState extends State<OrderItemWidget> {
+class _OrderItemWidgetState extends State<OrderItemWidget> with TickerProviderStateMixin {
   var _expanded = false;
+  AnimationController _controller;
+  Animation<double> _rotationAnimation;
+
+  @override
+  void initState() {
+    _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 400));
+    _rotationAnimation = Tween(begin: 0.0, end: 0.5).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,15 +39,25 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
         ListTile(
           title: Text('\$${widget.order.amount.toStringAsFixed(2)}'),
           subtitle: Text('${DateFormat('dd/MM/yyyy hh:mm').format(widget.order.dateTime)}'),
-          trailing: IconButton(icon: Icon(this._expanded ? Icons.expand_less : Icons.expand_more), onPressed: () {
-            setState(() {
-              this._expanded = !this._expanded;
-            });
-          },),
+          trailing: RotationTransition(
+            turns: _rotationAnimation,
+            child: IconButton(icon: Icon(Icons.expand_more), onPressed: () {
+              setState(() {
+                this._expanded = !this._expanded;
+              });
+              if (_expanded) {
+                _controller.forward();
+              } else {
+                _controller.reverse();
+              }
+            },),
+          ),
         ),
         AnimatedContainer(
-          duration: Duration(milliseconds: 100,),
-          height: _expanded ? min(widget.order.products.length * 20.0 + 10, 180) : 0,
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          curve: Curves.easeInOut,
+          duration: Duration(milliseconds: 300,),
+          height: _expanded ? math.min(widget.order.products.length * 20.0 + 10, 180) : 0,
           child: ListView(children: widget.order.products.map((prod) {
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
